@@ -1,10 +1,9 @@
 import { useEffect, useState } from "react";
-import { Layout, Table, Typography, Button, message } from "antd";
+import { Layout, Table, Button, message } from "antd";
 import axios from "axios";
 import CodeBlock from "../CodeBlock";
 
 const { Header, Content } = Layout;
-const { Title } = Typography;
 
 function HomePage() {
   const [snips, setSnips] = useState(

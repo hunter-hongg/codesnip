@@ -5,7 +5,7 @@ import "./App.css";
 import HomePage from "./pages/HomePage";
 import StatusPage from "./pages/StatusPage";
 
-const { Header, Content, Footer } = Layout;
+const { Header, Content } = Layout;
 
 function App() {
   const menuItems = [
