@@ -1,9 +1,10 @@
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import { Layout, Menu } from "antd";
-import { HomeOutlined, InfoCircleOutlined } from "@ant-design/icons";
+import { HomeOutlined, InfoCircleOutlined, PlusOutlined } from "@ant-design/icons";
 import "./App.css";
 import HomePage from "./pages/HomePage";
 import StatusPage from "./pages/StatusPage";
+import AddPage from "./pages/AddPage";
 
 const { Header, Content } = Layout;
 
@@ -18,6 +19,11 @@ function App() {
       key: "/status",
       icon: <InfoCircleOutlined />,
       label: <Link to="/status">状态</Link>,
+    },
+    {
+      key: "/add",
+      icon: <PlusOutlined />,
+      label: <Link to="/add">添加</Link>,
     },
   ];
 
@@ -47,6 +53,7 @@ function App() {
           <div style={{ background: "#fff", padding: 24, minHeight: 380 }}>
             <Routes>
               <Route path="/" element={<HomePage />} />
+              <Route path="/add" element={<AddPage />} />
               <Route path="/status" element={<StatusPage />} />
             </Routes>
           </div>

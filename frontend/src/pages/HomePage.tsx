@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Layout, Table, Button, message } from "antd";
+import { Layout, Table, Button, message, Tag } from "antd";
 import axios from "axios";
 import CodeBlock from "../CodeBlock";
 
@@ -25,6 +25,7 @@ function HomePage() {
             key: i,
             snip: snips[i].snip,
             language: snips[i].lang,
+            tags: snips[i].tags,
           });
         }
         setSnips(tmpS);
@@ -60,6 +61,40 @@ function HomePage() {
       key: "language",
       render: (text: string) => <a>{text}</a>,
     },
+    {
+      title: "Tags",
+      dataIndex: "tags",
+      key: "tags",
+      render: (text: string[]) => (
+        <div style={{ display: "flex", flexWrap: "wrap", gap: "8px" }}>
+          {text.map((tag, index) => {
+            const colors = [
+              "magenta", "red", "volcano", "orange", "gold",
+              "lime", "green", "cyan", "blue", "geekblue", "purple"
+            ];
+            const color = colors[index % colors.length];
+            return (
+              <Tag 
+                key={tag} 
+                color={color}
+                style={{
+                  borderRadius: "4px",
+                  padding: "4px 12px",
+                  fontSize: "13px",
+                  fontWeight: 500,
+                  margin: 0,
+                  boxShadow: "0 2px 4px rgba(0,0,0,0.08)",
+                  cursor: "default",
+                  transition: "all 0.3s ease",
+                }}
+              >
+                {tag}
+              </Tag>
+            );
+          })}
+        </div>
+      ),
+    }
   ];
 
   return (
