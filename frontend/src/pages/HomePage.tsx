@@ -11,34 +11,34 @@ function HomePage() {
   );
   const [loading, setLoading] = useState<boolean>(false);
 
-  const description = "Store, organize, and share your code snippets with ease.";
+  const description =
+    "Store, organize, and share your code snippets with ease.";
 
-  const fetchSnippets = () => {
+  const fetchSnippets = async () => {
     setLoading(true);
-    axios
-      .get("http://localhost:8081/api/snippets")
-      .then((res) => {
-        let snips = res.data.snips;
-        let tmpS = [];
-        for (let i = 0; i < snips.length; i++) {
-          tmpS.push({
-            key: i,
-            snip: snips[i].snip,
-            language: snips[i].lang,
-            tags: snips[i].tags,
-          });
-        }
-        setSnips(tmpS);
-        setLoading(false);
-      })
-      .catch((err) => {
+    try {
+      const res = await axios.get("http://localhost:8081/api/snippets");
+      const snips = res.data.snips;
+      const tmpS = [];
+      for (let i = 0; i < snips.length; i++) {
+        tmpS.push({
+          key: i,
+          snip: snips[i].snip,
+          language: snips[i].lang,
+          tags: snips[i].tags,
+        });
+      }
+      setSnips(tmpS);
+    } catch (err: unknown) {
+      if (err instanceof Error) {
         setSnips([]);
         console.log(err);
         message.error("获取代码片段失败");
-        setLoading(false);
-      });
+      }
+    } finally {
+      setLoading(false);
+    }
   };
-
   useEffect(() => {
     fetchSnippets();
   }, []);
@@ -69,13 +69,22 @@ function HomePage() {
         <div style={{ display: "flex", flexWrap: "wrap", gap: "8px" }}>
           {text.map((tag, index) => {
             const colors = [
-              "magenta", "red", "volcano", "orange", "gold",
-              "lime", "green", "cyan", "blue", "geekblue", "purple"
+              "magenta",
+              "red",
+              "volcano",
+              "orange",
+              "gold",
+              "lime",
+              "green",
+              "cyan",
+              "blue",
+              "geekblue",
+              "purple",
             ];
             const color = colors[index % colors.length];
             return (
-              <Tag 
-                key={tag} 
+              <Tag
+                key={tag}
                 color={color}
                 style={{
                   borderRadius: "4px",
@@ -94,7 +103,7 @@ function HomePage() {
           })}
         </div>
       ),
-    }
+    },
   ];
 
   return (
@@ -113,14 +122,20 @@ function HomePage() {
         </div>
       </Header>
       <Content style={{ padding: "30px" }}>
-        <div style={{ marginBottom: "16px", display: "flex", justifyContent: "flex-end" }}>
+        <div
+          style={{
+            marginBottom: "16px",
+            display: "flex",
+            justifyContent: "flex-end",
+          }}
+        >
           <Button type="primary" onClick={fetchSnippets} loading={loading}>
             刷新代码片段
           </Button>
         </div>
-        <Table 
-          columns={snipTitle} 
-          dataSource={snips} 
+        <Table
+          columns={snipTitle}
+          dataSource={snips}
           bordered={true}
           loading={loading}
         />

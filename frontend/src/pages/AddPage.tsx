@@ -36,14 +36,14 @@ function AddPage() {
     "XML",
     "Markdown",
   ];
-  let options_real = [];
+  const options_real = [];
   for (let i = 0; i < options.length; i++) {
     options_real.push({
       label: options[i],
       value: options[i].toLowerCase(),
     });
   }
-  let [currentLanguage, setCurrentLanguage] = useState<string>("python");
+  const [currentLanguage, setCurrentLanguage] = useState<string>("python");
 
   return (
     <Layout className="layout" style={{ minHeight: "100vh" }}>
@@ -156,7 +156,7 @@ function AddPage() {
           style={{ fontSize: "18px" }}
           onClick={async () => {
             try {
-              let res = await axios.post("http://localhost:8081/api/add_snippets", {
+              const res = await axios.post("http://localhost:8081/api/add_snippets", {
                 id: 0,
                 snip: codeSnippet,
                 lang: currentLanguage,
@@ -169,9 +169,9 @@ function AddPage() {
                 setAddResult(false);
                 setAddResultMsg(`添加失败，状态码：${res.status}，响应数据：${JSON.stringify(res.data.error)}`);
               }
-            } catch (err: any) {
+            } catch (err: unknown) {
               setAddResult(false);
-              setAddResultMsg(`添加失败，错误信息：${err.message}`);
+              setAddResultMsg(`添加失败，错误信息：${(err as Error).message}`);
             }
           }}
         >
