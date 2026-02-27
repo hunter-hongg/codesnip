@@ -113,6 +113,23 @@ func insertSnip(snip Snip) (int64, error) {
 	return result.LastInsertId()
 }
 
+func deleteSnip(id int) error { 
+	db, err := sql.Open("sqlite3", "./snips.db")
+
+	if err != nil {
+		return err
+	}
+	defer db.Close()
+
+	deleteQuery := `DELETE FROM snips WHERE id = ?`
+	_, err = db.Exec(deleteQuery, id)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
 // main函数是程序的入口点
 func main() {
 	r := gin.Default()
@@ -150,6 +167,23 @@ func main() {
 		c.JSON(201, gin.H{
 			"message": "Snippet created successfully",
 			"id":      id,
+		})
+	})
+	r.POST("/api/delete_snippets", func(c *gin.Context){
+		var newSnip Snip 
+		if err := c.ShouldBindJSON(&newSnip); err != nil {
+			c.JSON(400, gin.H{"error": "Invalid request body"})
+			return
+		}
+
+		err := deleteSnip(newSnip.ID)
+		if err != nil {
+			c.JSON(500, gin.H{"error": "Failed to delete snippet"})
+			return
+		}
+
+		c.JSON(200, gin.H{
+			"message": "Snippet deleted successfully",
 		})
 	})
 

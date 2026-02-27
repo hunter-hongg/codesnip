@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Layout, Table, Button, message, Tag } from "antd";
+import { Layout, Table, Button, message, Tag, Modal } from "antd";
 import axios from "axios";
 import CodeBlock from "../CodeBlock";
 
@@ -7,7 +7,7 @@ const { Header, Content } = Layout;
 
 function HomePage() {
   const [snips, setSnips] = useState(
-    [] as { language: string; snip: string; key: number }[],
+    [] as { language: string; snip: string; key: number; delete: string }[],
   );
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -22,10 +22,11 @@ function HomePage() {
       const tmpS = [];
       for (let i = 0; i < snips.length; i++) {
         tmpS.push({
-          key: i,
+          key: snips[i].id,
           snip: snips[i].snip,
           language: snips[i].lang,
           tags: snips[i].tags,
+          delete: "",
         });
       }
       setSnips(tmpS);
@@ -102,6 +103,46 @@ function HomePage() {
             );
           })}
         </div>
+      ),
+    },
+    {
+      title: "Delete",
+      dataIndex: "delete",
+      key: "delete",
+      render: (text: string, record: { key: number }) => (
+        <Button
+          style={{ backgroundColor: "red", color: "white", fontSize: "18px" }}
+          onClick={() => {
+            Modal.confirm({
+              title: "确认删除吗？",
+              content: "删除后不可恢复，确认吗？",
+              okText: "确认",
+              okType: "danger",
+              cancelText: "取消",
+              onOk: async () => {
+                try {
+                  await axios.post(
+                    "http://localhost:8081/api/delete_snippets",
+                    {
+                      id: record.key,
+                      lang: "", 
+                      snip: "",
+                      tags: [],
+                    }
+                  )
+                  fetchSnippets();
+                  message.success("删除代码片段成功");
+                } catch (err: unknown) {
+                  if (err instanceof Error) {
+                    message.error(`删除代码片段失败: ${err.message}`);
+                  }
+                }
+              }
+            })
+          }}
+        >
+          删除{text}
+        </Button>
       ),
     },
   ];

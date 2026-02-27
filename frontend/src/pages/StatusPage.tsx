@@ -12,7 +12,6 @@ function StatusPage() {
   const [error, setError] = useState<string>("");
 
   useEffect(() => {
-    setLoading(true);
     axios
       .get("http://localhost:8081/api/health")
       .then((res) => {
